@@ -1,0 +1,44 @@
+package com.cyborg.common.data
+
+import com.cyborg.common.data.model.CurrenciesResponse
+import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.DEFAULT
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.response.HttpResponse
+import io.ktor.client.response.readText
+import kotlinx.serialization.json.Json
+
+class CurrenciesApiService(private val currencyUrl: String) :
+    ApiService<String, CurrenciesResponse> {
+
+    private val client = HttpClient {
+
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+        }
+
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
+    }
+
+    override suspend fun execute(request: String?): CurrenciesResponse {
+
+        val httpResponse = client.get<HttpResponse> {
+            currencyUrl
+            parameter("s", request)
+        }
+
+        val json = httpResponse.readText()
+
+        return Json.nonstrict.parse(CurrenciesResponse.serializer(), json)
+    }
+
+}

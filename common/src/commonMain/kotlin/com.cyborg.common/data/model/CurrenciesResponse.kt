@@ -1,5 +1,6 @@
 package com.cyborg.common.data.model
 
+import com.badoo.reaktive.observable.Observable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
