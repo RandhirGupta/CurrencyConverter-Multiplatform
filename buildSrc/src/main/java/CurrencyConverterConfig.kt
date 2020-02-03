@@ -17,6 +17,7 @@ object CurrencyConverterConfig {
     object Plugins {
         const val androidPlugin = "com.android.tools.build:gradle:3.5.1"
         const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        const val kotlinSerialization = "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
     }
 
     object Libs {

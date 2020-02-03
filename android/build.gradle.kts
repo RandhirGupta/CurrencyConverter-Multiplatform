@@ -1,7 +1,19 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+}
 android {
+
+    compileSdkVersion(CurrencyConverterConfig.SdkVersion.compileSdkVersion)
 
     defaultConfig {
         applicationId = "com.cyborg.currencyconverter_multiplatform"
+        minSdkVersion(CurrencyConverterConfig.SdkVersion.minSdkVersion)
+        targetSdkVersion(CurrencyConverterConfig.SdkVersion.targetSdkVersion)
+        versionCode = 1
+        versionName = CurrencyConverterConfig.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -31,6 +43,8 @@ android {
 
 dependencies {
     implementation(CurrencyConverterConfig.Libs.Kotlin.jvm)
+
+    implementation(project(":common"))
 
     implementation(CurrencyConverterConfig.Libs.Support.appCompat)
     implementation(CurrencyConverterConfig.Libs.Support.design)

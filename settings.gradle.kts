@@ -1,2 +1,2 @@
 rootProject.buildFileName = "build.gradle.kts"
-include(":android")
+include(":android" , ":common")
