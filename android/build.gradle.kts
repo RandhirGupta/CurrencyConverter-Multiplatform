@@ -23,6 +23,10 @@ android {
     androidExtensions {
         isExperimental = true
     }
+
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 dependencies {

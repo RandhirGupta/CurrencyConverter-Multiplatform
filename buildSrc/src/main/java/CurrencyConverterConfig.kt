@@ -26,6 +26,7 @@ object CurrencyConverterConfig {
             const val jvm = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
             const val kotlinStdlibCommon =
                 "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+            const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         }
 
         object Support {
@@ -45,6 +46,12 @@ object CurrencyConverterConfig {
 
             const val kotlinxCoroutinesTest =
                 "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinXCoroutines"
+
+            const val kotlinTestCommon = "org.jetbrains.kotlin:kotlin-test-common:$kotlinVersion"
+
+            const val kotlinTestJunit = "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+
+            const val kotlinTest = "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
         }
 
         object AndroidTest {
@@ -69,6 +76,12 @@ object CurrencyConverterConfig {
 
             const val kotlinxSerializationRuntimeCommon =
                 "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization"
+
+            const val kotlinxSerializationRuntimeNative =
+                "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization"
+
+            const val kotlinxSerializationRuntime =
+                "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization"
         }
 
         object Ktor {
@@ -77,6 +90,14 @@ object CurrencyConverterConfig {
             const val ktorClientJson = "io.ktor:ktor-client-json:$ktor"
             const val ktorClientLogging = "io.ktor:ktor-client-logging:$ktor"
             const val ktorClientSerialization = "io.ktor:ktor-client-serialization:$ktor"
+            const val ktorClientIos = "io.ktor:ktor-client-ios:$ktor"
+            const val ktorClientJsonNative = "io.ktor:ktor-client-json-native:$ktor"
+            const val ktorClientLoggingNative = "io.ktor:ktor-client-logging-native:$ktor"
+            const val ktorClientSerializationNative =
+                "io.ktor:ktor-client-serialization-native:$ktor"
+            const val ktorClientJsonJvm = "io.ktor:ktor-client-json-jvm:$ktor"
+            const val ktorClientLoggingJvm = "io.ktor:ktor-client-logging-jvm:$ktor"
+            const val ktorClientSerializationJvm = "io.ktor:ktor-client-serialization-jvm:$ktor"
         }
     }
 }
