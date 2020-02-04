@@ -12,6 +12,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,6 +26,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/currencyName"
         app:layout_constraintRight_toRightOf="parent" />
