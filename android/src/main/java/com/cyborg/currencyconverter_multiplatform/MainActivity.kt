@@ -1,7 +1,10 @@
 package com.cyborg.currencyconverter_multiplatform
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.badoo.reaktive.observable.observeOn
@@ -19,7 +22,10 @@ import com.cyborg.currencyconverter_multiplatform.adapter.CurrenciesAdapter
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mCurrenciesRv: RecyclerView
+    private lateinit var mLoadingView: ConstraintLayout
+    private lateinit var mErrorView: ConstraintLayout
     private lateinit var mCurrenciesAdapter: CurrenciesAdapter
+    private lateinit var mRetryBtn: Button
 
     private val mBinding = ViewModelBinding()
 
@@ -43,8 +49,14 @@ class MainActivity : AppCompatActivity() {
 
         binding()
 
+        mLoadingView = findViewById(R.id.loadingView)
         mCurrenciesRv = findViewById(R.id.currenciesRv)
+        mErrorView = findViewById(R.id.errorView)
+        mRetryBtn = findViewById(R.id.retryBtn)
 
+        mRetryBtn.setOnClickListener {
+            binding()
+        }
         mCurrenciesAdapter = CurrenciesAdapter()
 
 
@@ -63,18 +75,36 @@ class MainActivity : AppCompatActivity() {
     private fun binding() {
         mBinding.subscribe(
             mCurrenciesViewModel.outputs.loading.observeOn(mainScheduler),
-            onNext = ::loading
+            onNext = ::loading,
+            onError = {
+                error()
+            }
         )
         mBinding.subscribe(
             mCurrenciesViewModel.outputs.result.observeOn(mainScheduler),
-            onNext = ::result
+            onNext = ::result,
+            onError = {
+                error()
+            }
         )
     }
 
     private fun loading(isLoading: Boolean) {
+        mLoadingView.visibility = if (isLoading) View.VISIBLE else View.GONE
+        mErrorView.visibility = View.GONE
+        mCurrenciesRv.visibility = View.GONE
     }
 
     private fun result(currenciesList: List<CurrencyModel>) {
+        mLoadingView.visibility = View.GONE
+        mCurrenciesRv.visibility = View.VISIBLE
+        mErrorView.visibility = View.GONE
         mCurrenciesAdapter.setCurrencyList(currenciesList)
+    }
+
+    private fun error() {
+        mErrorView.visibility = View.VISIBLE
+        mLoadingView.visibility = View.GONE
+        mCurrenciesRv.visibility = View.GONE
     }
 }

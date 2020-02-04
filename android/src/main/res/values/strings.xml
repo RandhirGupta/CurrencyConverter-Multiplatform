@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CurrencyConverter-MultiPlatform</string>
+    <string name="retry">retry</string>
+    <string name="error_message">Something went wrong at our end!</string>
 </resources>
