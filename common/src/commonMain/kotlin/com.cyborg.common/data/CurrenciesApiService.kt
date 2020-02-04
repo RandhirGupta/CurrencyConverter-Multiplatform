@@ -4,17 +4,21 @@ import com.cyborg.common.data.model.CurrenciesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
+import io.ktor.client.features.logging.SIMPLE
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
+import io.ktor.client.request.header
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
+import io.ktor.http.HttpHeaders
+import io.ktor.http.takeFrom
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 
-class CurrenciesApiService(private val currencyUrl: String) :
+class CurrenciesApiService(private val currencyUrl: String, private val baseCurrency: String) :
     ApiService<String, CurrenciesResponse> {
 
     private val client = HttpClient {
@@ -24,16 +28,27 @@ class CurrenciesApiService(private val currencyUrl: String) :
         }
 
         install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.ALL
+            logger = Logger.SIMPLE
+            level = LogLevel.HEADERS
         }
     }
 
+    private fun HttpRequestBuilder.apiUrl(path: String? = null) {
+        header(HttpHeaders.CacheControl, "no-cache")
+        url {
+            takeFrom(currencyUrl).parameters.append("base", baseCurrency)
+            path?.let {
+                encodedPath = it
+            }
+        }
+    }
+
+    @UnstableDefault
     override suspend fun execute(request: String?): CurrenciesResponse {
 
         val httpResponse = client.get<HttpResponse> {
-            currencyUrl
-            parameter("s", request)
+            apiUrl()
+//            parameter("s", request)
         }
 
         val json = httpResponse.readText()

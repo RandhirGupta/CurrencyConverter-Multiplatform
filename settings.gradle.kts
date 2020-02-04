@@ -1,2 +1,3 @@
-rootProject.buildFileName = "build.gradle.kts"
 include(":android" , ":common")
+enableFeaturePreview("GRADLE_METADATA")
+//rootProject.buildFileName = "build.gradle.kts"
