@@ -58,5 +58,6 @@ dependencies {
     androidTestImplementation(CurrencyConverterConfig.Libs.AndroidTest.testRules)
 
     implementation("com.badoo.reaktive:reaktive:1.0.0")
+    implementation("com.squareup.okhttp3:okhttp:4.0.1")
 }
 

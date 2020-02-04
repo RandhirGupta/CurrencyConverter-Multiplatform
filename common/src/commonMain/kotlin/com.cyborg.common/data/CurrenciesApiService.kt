@@ -1,7 +1,9 @@
 package com.cyborg.common.data
 
 import com.cyborg.common.data.model.CurrenciesResponse
+import com.cyborg.common.data.network.getHttpEngine
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
@@ -18,18 +20,24 @@ import io.ktor.http.takeFrom
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 
-class CurrenciesApiService(private val currencyUrl: String, private val baseCurrency: String) :
+class CurrenciesApiService(
+    private val currencyUrl: String,
+    private val baseCurrency: String
+) :
     ApiService<String, CurrenciesResponse> {
 
-    private val client = HttpClient {
+    private val client: HttpClient by lazy {
+        HttpClient(getHttpEngine()) {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer().apply {
+                    setMapper(CurrenciesResponse::class, CurrenciesResponse.serializer())
+                }
+            }
 
-        install(JsonFeature) {
-            serializer = KotlinxSerializer()
-        }
-
-        install(Logging) {
-            logger = Logger.SIMPLE
-            level = LogLevel.HEADERS
+            install(Logging) {
+                logger = Logger.SIMPLE
+                level = LogLevel.HEADERS
+            }
         }
     }
 
