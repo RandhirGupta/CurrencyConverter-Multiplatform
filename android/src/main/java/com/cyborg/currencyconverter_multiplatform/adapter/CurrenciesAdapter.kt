@@ -23,6 +23,8 @@ class CurrenciesAdapter : RecyclerView.Adapter<CurrenciesAdapter.CurrenciesViewH
         mCurrenciesList.clear()
         mCurrenciesList.addAll(list)
 
+        mCurrenciesList.removeAt(0)
+        
         mCurrenciesList.sortWith(compareBy {
             it.currencyName
         })

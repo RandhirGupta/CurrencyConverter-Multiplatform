@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,10 +23,12 @@ import com.cyborg.currencyconverter_multiplatform.adapter.CurrenciesAdapter
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mCurrenciesRv: RecyclerView
+    private lateinit var mContentLayout: ConstraintLayout
     private lateinit var mLoadingView: ConstraintLayout
     private lateinit var mErrorView: ConstraintLayout
     private lateinit var mCurrenciesAdapter: CurrenciesAdapter
     private lateinit var mRetryBtn: Button
+    private lateinit var mBaseCurrencyName: AppCompatTextView
 
     private val mBinding = ViewModelBinding()
 
@@ -51,8 +54,10 @@ class MainActivity : AppCompatActivity() {
 
         mLoadingView = findViewById(R.id.loadingView)
         mCurrenciesRv = findViewById(R.id.currenciesRv)
+        mContentLayout = findViewById(R.id.contentLayout)
         mErrorView = findViewById(R.id.errorView)
         mRetryBtn = findViewById(R.id.retryBtn)
+        mBaseCurrencyName = findViewById(R.id.baseCurrencyName)
 
         mRetryBtn.setOnClickListener {
             binding()
@@ -92,19 +97,22 @@ class MainActivity : AppCompatActivity() {
     private fun loading(isLoading: Boolean) {
         mLoadingView.visibility = if (isLoading) View.VISIBLE else View.GONE
         mErrorView.visibility = View.GONE
-        mCurrenciesRv.visibility = View.GONE
+        mContentLayout.visibility = View.GONE
     }
 
     private fun result(currenciesList: List<CurrencyModel>) {
+
         mLoadingView.visibility = View.GONE
-        mCurrenciesRv.visibility = View.VISIBLE
+        mContentLayout.visibility = View.VISIBLE
         mErrorView.visibility = View.GONE
+
+        mBaseCurrencyName.text = currenciesList[0].currencyName
         mCurrenciesAdapter.setCurrencyList(currenciesList)
     }
 
     private fun error() {
         mErrorView.visibility = View.VISIBLE
         mLoadingView.visibility = View.GONE
-        mCurrenciesRv.visibility = View.GONE
+        mContentLayout.visibility = View.GONE
     }
 }
