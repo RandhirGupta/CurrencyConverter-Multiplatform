@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.scheduler.mainScheduler
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.cyborg.common.data.CurrenciesApiService
 import com.cyborg.common.data.CurrenciesMapper
 import com.cyborg.common.data.model.CurrencyModel
@@ -19,6 +22,8 @@ import com.cyborg.common.presentation.ListViewModel
 import com.cyborg.common.presentation.ListViewModelImpl
 import com.cyborg.common.presentation.ViewModelBinding
 import com.cyborg.currencyconverter_multiplatform.adapter.CurrenciesAdapter
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCurrenciesAdapter: CurrenciesAdapter
     private lateinit var mRetryBtn: Button
     private lateinit var mBaseCurrencyName: AppCompatTextView
+    private lateinit var mBaseCurrencyIcon: AppCompatImageView
+    private lateinit var mBaseCurrencyDesc: AppCompatTextView
 
     private val mBinding = ViewModelBinding()
 
@@ -58,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         mErrorView = findViewById(R.id.errorView)
         mRetryBtn = findViewById(R.id.retryBtn)
         mBaseCurrencyName = findViewById(R.id.baseCurrencyName)
+        mBaseCurrencyIcon = findViewById(R.id.baseCurrencyIcon)
+        mBaseCurrencyDesc = findViewById(R.id.baseCurrencyDesc)
 
         mRetryBtn.setOnClickListener {
             binding()
@@ -107,6 +116,17 @@ class MainActivity : AppCompatActivity() {
         mErrorView.visibility = View.GONE
 
         mBaseCurrencyName.text = currenciesList[0].currencyName
+        mBaseCurrencyDesc.text = Currency.getInstance(currenciesList[0].currencyName).displayName
+
+        val drawable = resources.getIdentifier(
+            "flag_" + currenciesList[0].currencyName.toLowerCase(Locale.ENGLISH),
+            "drawable", packageName
+        )
+
+        Glide.with(this).load(drawable)
+            .apply(RequestOptions.circleCropTransform())
+            .into(baseCurrencyIcon)
+
         mCurrenciesAdapter.setCurrencyList(currenciesList)
     }
 
