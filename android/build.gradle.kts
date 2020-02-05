@@ -53,6 +53,8 @@ dependencies {
     implementation(CurrencyConverterConfig.Libs.Support.annotations)
     implementation(CurrencyConverterConfig.Libs.Support.materialDesign)
 
+    implementation(CurrencyConverterConfig.Libs.Misc.glide)
+
     testImplementation(CurrencyConverterConfig.Libs.Test.junit)
     androidTestImplementation(CurrencyConverterConfig.Libs.AndroidTest.testRunner)
     androidTestImplementation(CurrencyConverterConfig.Libs.AndroidTest.testRules)

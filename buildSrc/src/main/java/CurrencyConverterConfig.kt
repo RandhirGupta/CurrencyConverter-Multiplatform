@@ -100,5 +100,12 @@ object CurrencyConverterConfig {
             const val ktorClientLoggingJvm = "io.ktor:ktor-client-logging-jvm:$ktor"
             const val ktorClientSerializationJvm = "io.ktor:ktor-client-serialization-jvm:$ktor"
         }
+
+        object Misc{
+
+            private const val glideVersion = "4.8.0"
+
+            const val glide = "com.github.bumptech.glide:glide:$glideVersion"
+        }
     }
 }
