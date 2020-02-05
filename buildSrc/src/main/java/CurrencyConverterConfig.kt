@@ -101,7 +101,17 @@ object CurrencyConverterConfig {
             const val ktorClientSerializationJvm = "io.ktor:ktor-client-serialization-jvm:$ktor"
         }
 
-        object Misc{
+        object Network {
+
+            const val okHttp = "com.squareup.okhttp3:okhttp:4.0.1"
+        }
+
+        object Reactive {
+
+            const val reaktive = "com.badoo.reaktive:reaktive:1.0.0"
+        }
+
+        object Misc {
 
             private const val glideVersion = "4.8.0"
 

@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         val currencyMapper = CurrenciesMapper()
 
-        val currenciesService = CurrenciesApiService("https://revolut.duckdns.org/latest", "EUR")
+        val currenciesService = CurrenciesApiService("https://api.exchangeratesapi.io/latest", "EUR")
 
         val currenciesRepository = CurrenciesRepositoriesImpl(currenciesService)
 
