@@ -11,6 +11,7 @@ buildscript {
         classpath(CurrencyConverterConfig.Plugins.androidPlugin)
         classpath(CurrencyConverterConfig.Plugins.kotlinPlugin)
         classpath(CurrencyConverterConfig.Plugins.kotlinSerialization)
+        classpath(CurrencyConverterConfig.Plugins.sqlDelightPlugin)
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
