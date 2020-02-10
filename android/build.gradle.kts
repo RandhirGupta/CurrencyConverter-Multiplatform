@@ -60,6 +60,8 @@ dependencies {
     implementation(CurrencyConverterConfig.Libs.Support.materialDesign)
 
     implementation(CurrencyConverterConfig.Libs.Misc.glide)
+    debugImplementation(CurrencyConverterConfig.Libs.Misc.debugDatabase)
+    debugImplementation(CurrencyConverterConfig.Libs.Misc.androidSqliteDriver)
 
     testImplementation(CurrencyConverterConfig.Libs.Test.junit)
     androidTestImplementation(CurrencyConverterConfig.Libs.AndroidTest.testRunner)

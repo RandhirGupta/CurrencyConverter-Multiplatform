@@ -4,6 +4,7 @@ object CurrencyConverterConfig {
     private const val kotlinXCoroutines = "1.2.1"
     private const val serialization = "0.11.1"
     private const val ktor = "1.2.2"
+    private const val sqlDelightVersion = "1.2.0"
 
     const val version = "1.0"
 
@@ -18,6 +19,7 @@ object CurrencyConverterConfig {
         const val androidPlugin = "com.android.tools.build:gradle:3.5.1"
         const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         const val kotlinSerialization = "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
+        const val sqlDelightPlugin = "com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion"
     }
 
     object Libs {
@@ -116,6 +118,13 @@ object CurrencyConverterConfig {
             private const val glideVersion = "4.8.0"
 
             const val glide = "com.github.bumptech.glide:glide:$glideVersion"
+
+            const val sqlDelightRuntime = "com.squareup.sqldelight:runtime:$sqlDelightVersion"
+            const val sqlDelightIos = "com.squareup.sqldelight:ios-driver:$sqlDelightVersion"
+
+            const val debugDatabase = "com.amitshekhar.android:debug-db:1.0.6"
+
+            const val  androidSqliteDriver = "com.squareup.sqldelight:android-driver:$sqlDelightVersion"
         }
     }
 }

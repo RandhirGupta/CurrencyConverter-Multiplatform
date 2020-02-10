@@ -1,5 +1,6 @@
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.squareup.sqldelight'
 
 group = 'com.adrena.reaktive.core'
 version = 1.0
@@ -44,6 +45,9 @@ kotlin {
 
                 // Reactive
                 implementation "com.badoo.reaktive:reaktive:1.0.0"
+
+                //caching
+                implementation "com.squareup.sqldelight:runtime:1.2.0"
             }
         }
 
@@ -70,7 +74,7 @@ kotlin {
             dependencies {
                 implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0"
 
-                // Cache
+                // Caching
                 implementation "com.squareup.sqldelight:ios-driver:1.2.0"
 
                 // HTTP
@@ -90,6 +94,15 @@ kotlin {
         }
     }
 }
+
+sqldelight {
+    CurrencyDatabase {
+        packageName = "com.cyborg.common.sql"
+        sourceFolders = ["sqldelight"]
+        schemaOutputDirectory = file("src/commonMain/sqldelight/databases")
+    }
+}
+
 configurations {
     compileClasspath
 }

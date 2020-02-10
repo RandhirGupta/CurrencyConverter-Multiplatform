@@ -15,13 +15,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cyborg.common.data.CurrenciesApiService
 import com.cyborg.common.data.CurrenciesMapper
+import com.cyborg.common.data.local.CurrencyDao
+import com.cyborg.common.data.local.DatabaseHelper
 import com.cyborg.common.data.model.CurrencyModel
 import com.cyborg.common.data.repository.CurrenciesRepositoriesImpl
 import com.cyborg.common.domain.CurrencyUseCaseImpl
 import com.cyborg.common.presentation.ListViewModel
 import com.cyborg.common.presentation.ListViewModelImpl
 import com.cyborg.common.presentation.ViewModelBinding
+import com.cyborg.common.sql.CurrencyDatabase
 import com.cyborg.currencyconverter_multiplatform.adapter.CurrenciesAdapter
+import com.squareup.sqldelight.android.AndroidSqliteDriver
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -40,13 +44,27 @@ class MainActivity : AppCompatActivity() {
     private val mBinding = ViewModelBinding()
 
 
+    private val databaseHelper: DatabaseHelper by lazy {
+
+        val sqlDriver = AndroidSqliteDriver(
+            schema = CurrencyDatabase.Schema,
+            context = this,
+            name = "currencies.db"
+        )
+
+        DatabaseHelper("currencies.db", sqlDriver)
+    }
+
     private val mCurrenciesViewModel: ListViewModel<String, CurrencyModel> by lazy {
 
         val currencyMapper = CurrenciesMapper()
 
-        val currenciesService = CurrenciesApiService("https://api.exchangeratesapi.io/latest", "EUR")
+        val currenciesService =
+            CurrenciesApiService("https://api.exchangeratesapi.io/latest", "EUR")
 
-        val currenciesRepository = CurrenciesRepositoriesImpl(currenciesService)
+        val currencyDao = CurrencyDao(databaseHelper)
+
+        val currenciesRepository = CurrenciesRepositoriesImpl(currenciesService, currencyDao)
 
         val currencyUseCase = CurrencyUseCaseImpl(currenciesRepository)
 

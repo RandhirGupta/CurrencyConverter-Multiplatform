@@ -1,0 +1,23 @@
+CREATE TABLE currency(
+
+    base_currency TEXT PRIMARY KEY,
+    currency_meta TEXT NOT NULL
+);
+
+
+insert:
+INSERT INTO currency (base_currency, currency_meta)
+VALUES (?, ?);
+
+getCurrency:
+SELECT * FROM currency WHERE base_currency = ?;
+
+getAllCurrency:
+SELECT * FROM currency;
+
+
+deleteCurrencyMeta:
+DELETE FROM currency WHERE base_currency = ?;
+
+deleteAll:
+DELETE FROM currency;
