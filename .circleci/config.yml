@@ -2,16 +2,135 @@ version: 2.1
 
 aliases:
 
-#  SDK cache aliases
+  # SDK Cache aliases
+  - &restore-cache-android-packages
+    keys:
+      - v5-android-sdkmanager-packages-{{ arch }}-api-27-alpha-{{ checksum "workspace/repo/scripts/circle-ci-android-setup.sh" }}
+  - &save-cache-android-packages
+    paths:
+      - /opt/android/sdk
+    key: v5-android-sdkmanager-packages-{{ arch }}-api-27-alpha-{{ checksum "workspace/repo/scripts/circle-ci-android-setup.sh" }}
 
-orbs:
-  android: circleci/android@0.2.0
+  # Build dependencies Cache aliases
+  - &restore-cache-apt
+    keys:
+      - v4-apt-{{ arch }}-{{ .Branch }}-{{ checksum "workspace/repo/scripts/apt-get-android-deps.sh" }}
+  - &save-cache-apt
+    paths:
+      - ~/vendor/apt
+    key: v4-apt-{{ arch }}-{{ .Branch }}-{{ checksum "workspace/repo/scripts/apt-get-android-deps.sh" }}
+
+  #Install android SDK packages
+  - &install-android-packages
+    name: Install Android SDK Packages
+    command: source $HOME/currencyconverter-multiplatform-working-dir/workspace/repo/scripts/android_setup.sh && installAndroidSDK
+
+  #Install build dependencies
+  - &install-android-build-dependencies
+    name: Install Android Build Dependencies
+    command: $HOME/currencyconverter-multiplatform-working-dir/workspace/repo/scripts/apt-get-android-deps.sh
+
+  # Download project Gradle dependencies
+  - &download-gradle-dependencies
+    name: Download Gradle dependencies
+    command: |
+      cd workspace/repo
+      ./gradlew :currencyconverter-multiplatform-it:testDebugUnitTest --tests "*NodeInfoTest" --no-daemon
+
+  # Repo Cache aliases
+  - &restore-repo-cache
+    keys:
+      - v3-jars-{{ checksum "workspace/repo/build.gradle" }}-{{ checksum  "workspace/repo/gradle.properties" }}
+  - &save-repo-cache
+    paths:
+      - ~/.gradle/caches
+      - ~/.gradle/wrapper
+    key: v3-jars-{{ checksum "workspace/repo/build.gradle" }}-{{ checksum  "workspace/repo/gradle.properties" }}
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: ~/currencyconverter-multiplatform-working-dir/workspace
+
+executors:
+  currencyconverter-multiplatform-executor:
+    working_directory: ~/currencyconverter-multiplatform-working-dir
+    environment:
+      # Borrowed from https://github.com/chrisbanes/tivi/blob/master/.circleci/config.yml
+      # Sometimes gradle_tests_run job would fail with OOM error from CI. This is an attempt to fix it!
+      _JAVA_OPTIONS: "-Xmx1500m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
+      TERM: 'dumb'
+
+commands:
+
+  attach_restore_setup_buck:
+    description: "A command that attaches to workspace, restores caches and setups BUCK"
+    steps:
+      - *attach_workspace
+      - restore_cache: *restore-repo-cache
+      - restore_cache: *restore-cache-android-packages
+
+  gradle_build:
+    description: "A command that uses Gradle for build"
+    parameters:
+      module_name:
+        type: String
+    steps:
+      - run:
+          name: Build <<parameters.module_name>> with Gradle
+          command: |
+            cd workspace/repo
+                        ./gradlew :<<parameters.module_name>>:assembleDebug --no-daemon --max-workers 2
 
 jobs:
-  build:
-    executor: android/android
-
+  checkout_code:
     steps:
-      - checkout
-      - run:
-          command: ./gradlew build --stacktrace
+      # Create folders needed
+      - run: mkdir -p workspace
+      - run: mkdir -p repo
+
+      # Checkout code into repo
+      - checkout:
+          path: workspace/repo
+
+      # Manage Android build depencies caches
+      - restore_cache: *restore-cache-apt
+      - run: *install-android-build-dependencies
+      - save_cache: *save-cache-apt
+
+      # Manage Android SDK caches
+      - restore_cache: *restore-cache-android-packages
+      - run: *install-android-packages
+      - save_cache: *save-cache-android-packages
+
+      # Persist repo code
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - repo
+
+  build:
+    executor: currencyconverter-multiplatform-executor
+    steps:
+      - run: *download-gradle-dependencies
+      - save_cache: *save-repo-cache
+
+  gradle_android_build:
+    executor: currencyconverter-multiplatform-executor
+    steps:
+      - gradle_build:
+          module_name: "android"
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - gradle_android_build:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
